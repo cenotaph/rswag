@@ -126,14 +126,10 @@ module Rswag
         # Accept header
         mime_list = Array(metadata[:operation][:produces] || swagger_doc[:produces])
         target_node = metadata[:response]
-        target_node.merge!(content: {})
-        upgrade_schema!(mime_list, target_node)
-        upgrade_examples!(mime_list, target_node)
+        upgrade_content!(mime_list, target_node)
         metadata[:response].delete(:schema)
-        metadata[:response].delete(:example)
-        metadata[:response].delete(:examples)
       end
-
+      
       def upgrade_content!(mime_list, target_node)
         schema = target_node[:schema]
         return if mime_list.empty? || schema.nil?
