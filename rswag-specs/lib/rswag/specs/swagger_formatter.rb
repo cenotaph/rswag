@@ -56,9 +56,10 @@ module Rswag
                 is_hash = value.is_a?(Hash)
                 if is_hash && value.dig(:parameters)
                   schema_param = value.dig(:parameters)&.find { |p| (p[:in] == :body || p[:in] == :formData) && p[:schema] }
-                  mime_list = value.dig(:consumes)
+                  mime_list = value.dig(:consumes) || doc[:consumes]
                   if value && schema_param && mime_list
                     value[:requestBody] = { content: {} } unless value.dig(:requestBody, :content)
+                    value[:requestBody][:required] = true if schema_param[:required]
                     mime_list.each do |mime|
                       value[:requestBody][:content][mime] = { schema: schema_param[:schema],
                     example: value[:parameters][0][:requestExample] }
@@ -133,6 +134,7 @@ module Rswag
         metadata[:response].delete(:examples)
       end
 
+<<<<<<< HEAD
       def upgrade_schema!(mime_list, target_node)
         schema = target_node[:schema]
         return if mime_list.empty? || schema.nil?
@@ -172,6 +174,16 @@ module Rswag
       def set_mime_type_content!(target_node, mime_type, key, value)
         if target_node[:content][mime_type].nil?
           target_node[:content][mime_type] = {}
+=======
+      def upgrade_content!(mime_list, target_node)
+        schema = target_node[:schema]
+        return if mime_list.empty? || schema.nil?
+
+        target_node[:content] ||= {}
+        mime_list.each do |mime_type|
+          # TODO upgrade to have content-type specific schema
+          (target_node[:content][mime_type] ||= {}).merge!(schema: schema)
+>>>>>>> 05e22c3bd7fff53d40cd8104678dab73d0b7aff7
         end
         target_node[:content][mime_type][key] = value
       end
