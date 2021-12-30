@@ -4,21 +4,21 @@ source 'https://rubygems.org'
 
 # Allow the rails version to come from an ENV setting so Travis can test multiple versions.
 # See http://www.schneems.com/post/50991826838/testing-against-multiple-rails-versions/
-rails_version = ENV['RAILS_VERSION'] || '5.2.4.2'
+rails_version = ENV['RAILS_VERSION'] || '7.0'
 
-gem 'rails', rails_version.to_s
-
+# gem 'rails', rails_version.to_s
+gem "rails", github: "rails/rails", branch: "7-0-stable"
 case rails_version.split('.').first
 when '3'
   gem 'strong_parameters'
-when '4', '5', '6'
+when '4', '5', '6', '7'
   gem 'responders'
 end
 
 case rails_version.split('.').first
 when '3', '4', '5'
   gem 'sqlite3', '~> 1.3.6'
-when  '6'
+when  '6', '7'
   gem 'sqlite3', '~> 1.4.1'
 end
 
@@ -41,8 +41,8 @@ group :development do
 end
 
 group :assets do
-  gem 'therubyracer'
-  gem 'uglifier'
+  # gem 'therubyracer'
+  # gem 'uglifier'
 end
 
 gem 'byebug'
